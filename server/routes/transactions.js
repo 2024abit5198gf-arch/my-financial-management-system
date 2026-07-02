@@ -1,5 +1,5 @@
 import express from 'express';
-import { Transaction, FinanceSummary } from '../models/index.js';
+import { Transaction } from '../models/index.js';
 import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -54,12 +54,16 @@ router.post('/pay', authenticateToken, async (req, res) => {
       description: `${paymentOption === 'full' ? 'Full' : 'Half'} fee payment for ${classLevel}`,
     });
 
-      const student = await Transaction.sequelize.models.User.findByPk(userId);
-      if (student) {
-        const newOutstanding = Math.max(Number(student.outstandingFees) - amount, 0);
-        await student.update({ outstandingFees: newOutstanding });
-      }
+    const student = await Transaction.sequelize.models.User.findByPk(userId);
+    if (student) {
+      const newOutstanding = Math.max(Number(student.outstandingFees) - amount, 0);
+      await student.update({ outstandingFees: newOutstanding });
+    }
 
+    return res.status(201).json(transaction);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Unable to process payment.' });
   }
 });
 
