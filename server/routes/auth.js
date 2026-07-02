@@ -55,7 +55,7 @@ router.post('/signup', async (req, res) => {
 
   const token = jwt.sign(
     { userId: newUser.id, email: newUser.email, name: newUser.name, role: newUser.role },
-    process.env.JWT_SECRET,
+    process.env.JWT_SECRET || 'dev-secret-change-me',
     { expiresIn: '12h' }
   );
 
@@ -92,7 +92,7 @@ router.post('/login', async (req, res) => {
 
   const token = jwt.sign(
     { userId: existingUser.id, email: existingUser.email, name: existingUser.name, role: existingUser.role },
-    process.env.JWT_SECRET,
+    process.env.JWT_SECRET || 'dev-secret-change-me',
     { expiresIn: '12h' }
   );
 
