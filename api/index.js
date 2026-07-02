@@ -14,6 +14,8 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
+process.env.JWT_SECRET ||= 'dev-secret-change-me';
+
 const app = express();
 
 app.use(cors());
